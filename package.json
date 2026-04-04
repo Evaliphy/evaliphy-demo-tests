@@ -1,0 +1,16 @@
+{
+  "name": "evaliphy-demo-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "evaliphy eval",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "evaliphy": "^1.0.1-beta.5"
+  }
+}
