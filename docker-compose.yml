@@ -1,0 +1,18 @@
+services:
+  rag-server:
+    build:
+      context: ./rag-server
+      dockerfile: Dockerfile
+    container_name: rag-server
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      LOG_LEVEL: "info"
+      DEMO_BEARER_TOKEN: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo"
+      DEMO_JWT_SECRET: "demo-secret"
+      RATE_LIMIT_MAX: "100"
+      RATE_LIMIT_WINDOW_MS: "60000"
+      SESSION_MAX_TURNS: "100"
+      SESSION_TTL_MS: "1800000"
+    restart: unless-stopped

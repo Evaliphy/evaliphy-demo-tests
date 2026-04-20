@@ -1,5 +1,5 @@
 {
-  "name": "evaliphy-demo-tests",
+  "name": "rag-eval",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,6 +11,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "evaliphy": "^1.0.1-beta.5"
+    "evaliphy": "*"
   }
 }

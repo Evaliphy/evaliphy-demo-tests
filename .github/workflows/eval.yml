@@ -1,0 +1,78 @@
+name: Eval Suite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Node setup ──────────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            rag-server/package-lock.json
+            rag-eval/package-lock.json
+
+      # ── rag-server ───────────────────────────────────────────────────────────
+      - name: Install rag-server dependencies
+        working-directory: rag-server
+        run: npm ci
+
+      - name: Build rag-server
+        working-directory: rag-server
+        run: npm run build
+
+      - name: Start rag-server
+        working-directory: rag-server
+        env:
+          PORT: 3000
+          JWT_SECRET: ci-secret
+          DEMO_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo
+          NODE_ENV: test
+        run: node dist/server.js &
+
+      - name: Wait for rag-server to be ready
+        run: |
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:3000/health > /dev/null 2>&1; then
+              echo "rag-server is ready"
+              exit 0
+            fi
+            echo "Waiting... ($i)"
+            sleep 1
+          done
+          echo "rag-server did not start in time" && exit 1
+
+      # ── rag-eval ────────────────────────────────────────────────────────────
+      - name: Install rag-eval dependencies
+        working-directory: rag-eval
+        run: npm ci
+
+      - name: Run evals
+        working-directory: rag-eval
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          RAG_BASE_URL: http://localhost:3000
+          RAG_BEARER_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo
+        run: npm test
+
+      # ── Artifacts ───────────────────────────────────────────────────────────
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: rag-eval/report/
+          retention-days: 14

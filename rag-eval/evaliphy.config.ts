@@ -2,10 +2,10 @@ import { defineConfig } from 'evaliphy';
 
 export default defineConfig({
   http: {
-    baseUrl: "http://localhost:8000",
+    baseUrl: "http://localhost:3000",
     timeout: 10000,
     headers: {
-      "X-API-Key": "my-secret-test-key"
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo"
     }
   },
   evalDir: './evals',
