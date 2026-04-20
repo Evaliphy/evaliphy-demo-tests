@@ -45,7 +45,6 @@ jobs:
 
       - name: Wait for rag-server to be ready
         run: sleep 10s
-          
 
       # ── rag-eval ────────────────────────────────────────────────────────────
       - name: Install rag-eval dependencies
