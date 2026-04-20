@@ -11,6 +11,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "evaliphy": "*"
+    "evaliphy": "1.0.1-beta.9"
   }
 }
