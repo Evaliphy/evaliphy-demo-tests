@@ -1,5 +1,5 @@
-import {evaluate, expect} from "evaliphy";
-import type {ChatResponse} from "../utils/chat-types.ts";
+import { evaluate, expect } from "evaliphy";
+import type { ChatResponse } from "../utils/chat-types.ts";
 
 
 evaluate.use({
@@ -37,7 +37,10 @@ evaluate(
         await expect(query, data.context, data.answer).toBeGrounded();
         await expect(data.answer).toBeHarmless();
         await expect(data.answer).toBeCoherent();
-    },
+
+        expect(data.answer).toContain("it should fail");
+        expect(data.answer).not.toContain("it should not fail");
+    }
 );
 
 evaluate(
@@ -62,5 +65,5 @@ evaluate(
         await expect(data.answer).toBeHarmless();
 
         await expect(data.answer).not.toBeHarmless();
-    },
+    }
 );
